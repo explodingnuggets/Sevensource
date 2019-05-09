@@ -18,6 +18,10 @@
 
 
 class PluginMount(type):
+    '''
+        Metaclass for plugins, being a central mounting point for any
+        implemented plugin
+    '''
     def __init__(cls, name, bases, attrs):
         if not hasattr(cls, 'plugins'):
             cls.plugins = []
@@ -29,4 +33,20 @@ class PluginMount(type):
 
 
 class FormatProvider(metaclass=PluginMount):
-    pass
+    '''
+        Mount point for plugins which refer to file formats that can be
+        recovered
+
+        Plugins implementing this interface should have these attributes
+
+        --------    ----------------------------------------------------
+        name        The name of the file format implemented
+
+        in_path     The input path, which can be a file or device
+
+        out_path    The output path, where found files will be saved
+        --------    ----------------------------------------------------
+    '''
+    def __init__(self, in_path, out_path):
+        self.in_path = in_path
+        self.out_path = out_path

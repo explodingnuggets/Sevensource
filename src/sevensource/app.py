@@ -18,7 +18,6 @@
 
 import sys
 from .commands import parser
-from .plugins import FormatProvider
 
 
 def main():
