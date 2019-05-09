@@ -16,4 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from sevensource.commands import parser
+
+class PluginMount(type):
+    def __init__(cls, name, bases, attrs):
+        if not hasattr(cls, 'plugins'):
+            cls.plugins = []
+        else:
+            cls.plugins.append(cls)
+
+    def get_plugins(cls, *args, **kwargs):
+        return [p(*args, **kwargs) for p in cls.plugins]
+
+
+class FormatProvider(metaclass=PluginMount):
+    pass

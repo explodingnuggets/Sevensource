@@ -16,13 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys
-from sevensource.commands import parser
+from sevensource.app import main
 
-
-def main():
-    parser.parse_args(sys.argv[1:])
-    print('Initial Commit')
 
 if __name__ == '__main__':
     main()
