@@ -17,8 +17,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+import sys
 from sevensource import __version__
 
-parser = argparse.ArgumentParser('sevensource')
-parser.add_argument('-v', '--version', action='version',
-                    version='%(prog)s ' + __version__)
+
+def parse_args(args=sys.argv[1:]):
+    parser = argparse.ArgumentParser('sevensource')
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s ' + __version__)
+    parser.add_argument('-o', '--output', default='./output', nargs='?')
+    parser.add_argument('input', nargs=1)
+
+    return parser.parse_args(args)

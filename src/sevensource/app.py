@@ -17,15 +17,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import sys
-from .commands import parser
+from .commands import parse_args
 from .formats import *
 from .plugins import FormatProvider
 
 
 def main():
-    parser.parse_args(sys.argv[1:])
+    args = parse_args()
 
-    for p in FormatProvider.get_plugins('in.bin', 'out'):
+    in_path = args.input
+    out_path = args.output
+
+    for p in FormatProvider.get_plugins(in_path, out_path):
         p.execute()
 
 if __name__ == '__main__':
