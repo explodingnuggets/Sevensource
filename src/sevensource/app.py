@@ -18,11 +18,15 @@
 
 import sys
 from .commands import parser
+from .formats import *
+from .plugins import FormatProvider
 
 
 def main():
     parser.parse_args(sys.argv[1:])
-    print('Initial Commit')
+
+    for p in FormatProvider.get_plugins('in.bin', 'out'):
+        p.execute()
 
 if __name__ == '__main__':
     main()
