@@ -28,6 +28,6 @@ def parse_args(args=sys.argv[1:]):
                         version='%(prog)s ' + __version__)
     parser.add_argument('-f', '--formats', action=AvailableFormats)
     parser.add_argument('-o', '--output', default='./output', nargs='?')
-    parser.add_argument('input', nargs=1)
+    parser.add_argument('input')
 
     return parser.parse_args(args)
