@@ -17,17 +17,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-import sys
-from sevensource import __version__
-from .actions import AvailableFormats
+from sevensource.plugins import FormatProvider
 
 
-def parse_args(args=sys.argv[1:]):
-    parser = argparse.ArgumentParser('sevensource')
-    parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s ' + __version__)
-    parser.add_argument('-f', '--formats', action=AvailableFormats)
-    parser.add_argument('-o', '--output', default='./output', nargs='?')
-    parser.add_argument('input', nargs=1)
+class AvailableFormats(argparse.Action):
+    def __init__(self, option_strings, dest, nargs=0, **kwargs):
+        super().__init__(option_strings, dest, nargs=0)
 
-    return parser.parse_args(args)
+    def __call__(self, parser, namespace, values, option_string=None):
+        print('Available formats:')
+        for p in FormatProvider.get_plugins('', ''):
+            print(p.name)
+
+        parser.exit()

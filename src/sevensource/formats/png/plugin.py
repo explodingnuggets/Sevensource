@@ -20,7 +20,7 @@ from sevensource.plugins import FormatProvider
 
 
 class PNG(FormatProvider):
-    name = 'png'
+    name = 'PNG'
 
     def execute(self):
         print(f'name: {self.name} - in: {self.in_path} - out: {self.out_path}')
