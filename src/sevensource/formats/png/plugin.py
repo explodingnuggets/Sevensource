@@ -16,11 +16,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import io
 from sevensource.plugins import FormatProvider
 
 
 class PNG(FormatProvider):
     name = 'PNG'
 
+    ''' PNG format specifics '''
+    __HEADER = b'\x89PNG\x0d\x0a\x1a\x0a'
+    __HEADER_LEN = len(__HEADER)
+
+    def __find_header(self, f: io.BufferedReader) -> int:
+        while True:
+            bytes_read = f.read(self.__HEADER_LEN)
+
+            if len(bytes_read) != self.__HEADER_LEN:
+                return
+
+            if bytes_read == self.__HEADER:
+                return f.tell() - self.__HEADER_LEN
+
+            f.seek(-(self.__HEADER_LEN - 1), io.SEEK_CUR)
+
     def execute(self):
-        print(f'name: {self.name} - in: {self.in_path} - out: {self.out_path}')
+        with open(self.in_path, 'rb') as f:
+            start_at = self.__find_header(f)
+
+            if start_at is not None:
+                pass
