@@ -42,6 +42,8 @@ class FormatProvider(metaclass=PluginMount):
         --------    ----------------------------------------------------
         name        The name of the file format implemented
 
+        extension   The format file extension
+
         in_path     The input path, which can be a file or device
 
         out_path    The output path, where found files will be saved
@@ -49,6 +51,6 @@ class FormatProvider(metaclass=PluginMount):
         execute     The function to be run to recover files
         --------    ----------------------------------------------------
     '''
-    def __init__(self, in_path, out_path):
+    def __init__(self, in_path: str, out_path: str):
         self.in_path = in_path
         self.out_path = out_path

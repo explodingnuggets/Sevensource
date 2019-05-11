@@ -17,9 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import io
+import os
 import zlib
 from enum import Enum
 from sevensource.plugins import FormatProvider
+from sevensource.files.file import FileOperations
 
 
 class ChunkStatus(Enum):
@@ -30,6 +32,7 @@ class ChunkStatus(Enum):
 
 class PNG(FormatProvider):
     name = 'PNG'
+    extension = 'png'
 
     ''' PNG format specifics '''
     __BYTE_ORDER = 'big'
@@ -99,8 +102,14 @@ class PNG(FormatProvider):
 
         return ChunkStatus.ERROR
 
+    def __get_file_path(self, index: int) -> str:
+        filename = f'image-{index}.{self.extension}'
+        return os.path.join(self.out_path, filename)
+
     def execute(self):
         with open(self.in_path, 'rb') as f:
+            index = 0
+
             while True:
                 start_at = self.__find_header(f)
 
@@ -114,6 +123,8 @@ class PNG(FormatProvider):
                         break
 
                     if chunk_status == ChunkStatus.END:
-                        print('Found file')
+                        end_at = f.tell()
+                        out_path = self.__get_file_path(index)
+                        FileOperations.copy(f, out_path, start_at, end_at)
+                        index += 1
                         break
-

@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import sys
 from .commands import parse_args
+from .files.file import FileOperations
 from .formats import *
 from .plugins import FormatProvider
 
@@ -27,6 +29,9 @@ def main():
 
     in_path = args.input
     out_path = args.output
+
+    os.makedirs(out_path, exist_ok=True)
+    FileOperations.set_buffer_size(args.buffersize)
 
     for p in FormatProvider.get_plugins(in_path, out_path):
         p.execute()

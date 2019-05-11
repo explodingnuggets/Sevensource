@@ -16,19 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import argparse
-import sys
-from sevensource import __version__
-from .actions import AvailableFormats
+import io
 
 
-def parse_args(args=sys.argv[1:]):
-    parser = argparse.ArgumentParser('sevensource')
-    parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s ' + __version__)
-    parser.add_argument('-f', '--formats', action=AvailableFormats)
-    parser.add_argument('-o', '--output', default='./output', nargs='?')
-    parser.add_argument('-bs', '--buffersize', default=4096, type=int)
-    parser.add_argument('input')
+class FileOperations():
+    buffer_size = None
 
-    return parser.parse_args(args)
+    @staticmethod
+    def set_buffer_size(buffer_size: int):
+        FileOperations.buffer_size = buffer_size
+
+    @staticmethod
+    def copy(f: io.BufferedReader, out_path: str, start: int, end: int):
+        with open(out_path, 'wb') as out:
+            f.seek(start, io.SEEK_SET)
+            remaining_bytes = end - start
+
+            while remaining_bytes > 0:
+                read_num = min(FileOperations.buffer_size, remaining_bytes)
+                out.write(f.read(read_num))
+                remaining_bytes -= read_num
+
+            f.seek(end, io.SEEK_SET)

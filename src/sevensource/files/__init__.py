@@ -15,20 +15,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import argparse
-import sys
-from sevensource import __version__
-from .actions import AvailableFormats
-
-
-def parse_args(args=sys.argv[1:]):
-    parser = argparse.ArgumentParser('sevensource')
-    parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s ' + __version__)
-    parser.add_argument('-f', '--formats', action=AvailableFormats)
-    parser.add_argument('-o', '--output', default='./output', nargs='?')
-    parser.add_argument('-bs', '--buffersize', default=4096, type=int)
-    parser.add_argument('input')
-
-    return parser.parse_args(args)
