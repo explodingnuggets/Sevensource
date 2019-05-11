@@ -46,9 +46,12 @@ class FormatProvider(metaclass=PluginMount):
 
         out_path    The output path, where found files will be saved
 
+        buffer_size The buffer size to be used when copying files
+
         execute     The function to be run to recover files
         --------    ----------------------------------------------------
     '''
-    def __init__(self, in_path, out_path):
+    def __init__(self, in_path: str, out_path: str, buffer_size: int):
         self.in_path = in_path
         self.out_path = out_path
+        self.buffer_size = buffer_size

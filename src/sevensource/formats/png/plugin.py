@@ -116,4 +116,3 @@ class PNG(FormatProvider):
                     if chunk_status == ChunkStatus.END:
                         print('Found file')
                         break
-

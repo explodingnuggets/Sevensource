@@ -27,8 +27,9 @@ def main():
 
     in_path = args.input
     out_path = args.output
+    buffer_size = args.buffersize
 
-    for p in FormatProvider.get_plugins(in_path, out_path):
+    for p in FormatProvider.get_plugins(in_path, out_path, buffer_size):
         p.execute()
 
 if __name__ == '__main__':
