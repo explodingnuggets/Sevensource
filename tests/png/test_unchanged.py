@@ -19,9 +19,14 @@
 import os
 import pytest
 from . import RESOURCES_PATH
+from io import SEEK_SET
 from sevensource.formats.png import PNG
+from sevensource.formats.png.plugin import ChunkStatus
 
 image_path = os.path.join(RESOURCES_PATH, 'unchanged.png')
+
+HEADER_LEN = 8
+CHUNK_START = HEADER_LEN
 
 
 def test_header_pos():
@@ -32,3 +37,17 @@ def test_header_pos():
 
         res = plugin._find_header(f)
         assert (res is None)
+
+
+def test_chunk_parsing():
+    with open(image_path, 'rb') as f:
+        f.seek(CHUNK_START, SEEK_SET)
+        plugin = PNG('', '')
+
+        while True:
+            res = plugin._parse_chunk(f)
+
+            assert (res != ChunkStatus.ERROR)
+
+            if res == ChunkStatus.END:
+                break

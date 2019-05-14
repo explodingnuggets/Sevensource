@@ -88,8 +88,6 @@ class PNG(FormatProvider):
             chunk_typs = chunk_typ.decode('utf-8')
             chunk_crci = int.from_bytes(chunk_crc, self.__BYTE_ORDER)
 
-            print(chunk_typs)
-
             if (self._check_chunk_type(chunk_typs) and
                     self._check_chunk_crc(chunk, chunk_crci)):
 
