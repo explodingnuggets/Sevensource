@@ -20,8 +20,6 @@ import os
 import pytest
 from . import common, HEADER_LEN, RESOURCES_PATH
 from io import SEEK_SET
-from sevensource.formats.png import PNG
-from sevensource.formats.png.plugin import ChunkStatus
 
 IMAGE_PATH = os.path.join(RESOURCES_PATH, 'changed.png')
 

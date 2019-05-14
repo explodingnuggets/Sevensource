@@ -20,13 +20,12 @@ import os
 import pytest
 from . import common, HEADER_LEN, RESOURCES_PATH
 from io import SEEK_SET
-from sevensource.formats.png import PNG
-from sevensource.formats.png.plugin import ChunkStatus
 
 IMAGE_PATH = os.path.join(RESOURCES_PATH, 'unchanged.png')
 
 PADDING = 0
 CHUNK_START = HEADER_LEN
+
 
 def test_header_pos():
     with open(IMAGE_PATH, 'rb') as f:
@@ -37,5 +36,5 @@ def test_header_pos():
 def test_chunk_parsing():
     with open(IMAGE_PATH, 'rb') as f:
         f.seek(CHUNK_START, SEEK_SET)
-        
+
         common.assert_parse_chunk(f)
