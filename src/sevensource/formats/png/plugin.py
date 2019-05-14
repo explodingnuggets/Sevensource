@@ -41,7 +41,7 @@ class PNG(FormatProvider):
     __TYPE_IEND = 'IEND'
     __CRITICAL_TYPES = ['IHDR', 'IDAT', 'PLTE', __TYPE_IEND]
 
-    def __find_header(self, f: io.BufferedReader) -> int:
+    def _find_header(self, f: io.BufferedReader) -> int:
         while True:
             bytes_read = f.read(self.__HEADER_LEN)
 
@@ -53,7 +53,7 @@ class PNG(FormatProvider):
 
             f.seek(-(self.__HEADER_LEN - 1), io.SEEK_CUR)
 
-    def __read_chunk(self, f: io.BufferedReader) -> tuple:
+    def _read_chunk(self, f: io.BufferedReader) -> tuple:
         chunk_len = f.read(4)
         chunk_leni = int.from_bytes(chunk_len, self.__BYTE_ORDER)
         chunk_rest = f.read(8 + chunk_leni)
@@ -65,7 +65,7 @@ class PNG(FormatProvider):
 
             return (chunk_len, chunk_typ, chunk_dat, chunk_crc)
 
-    def __check_chunk_type(self, chunk_type: str) -> bool:
+    def _check_chunk_type(self, chunk_type: str) -> bool:
         if chunk_type[0].isupper() and chunk_type in self.__CRITICAL_TYPES:
             return True
         elif chunk_type.isalpha() and chunk_type[2].isupper():
@@ -73,13 +73,13 @@ class PNG(FormatProvider):
 
         return False
 
-    def __check_chunk_crc(self, chunk: bytes, chunk_crc: int) -> bool:
+    def _check_chunk_crc(self, chunk: bytes, chunk_crc: int) -> bool:
         crc = zlib.crc32(chunk)
 
         return (crc == chunk_crc)
 
-    def __parse_chunk(self, f: io.BufferedReader) -> ChunkStatus:
-        chunk_read = self.__read_chunk(f)
+    def _parse_chunk(self, f: io.BufferedReader) -> ChunkStatus:
+        chunk_read = self._read_chunk(f)
 
         if chunk_read is not None:
             chunk_len, chunk_typ, chunk_dat, chunk_crc = chunk_read
@@ -90,8 +90,8 @@ class PNG(FormatProvider):
 
             print(chunk_typs)
 
-            if (self.__check_chunk_type(chunk_typs) and
-                    self.__check_chunk_crc(chunk, chunk_crci)):
+            if (self._check_chunk_type(chunk_typs) and
+                    self._check_chunk_crc(chunk, chunk_crci)):
 
                 if chunk_typs == self.__TYPE_IEND:
                     return ChunkStatus.END
@@ -102,7 +102,7 @@ class PNG(FormatProvider):
 
         return ChunkStatus.ERROR
 
-    def __get_file_path(self, index: int) -> str:
+    def _get_file_path(self, index: int) -> str:
         filename = f'image-{index}.{self.extension}'
         return os.path.join(self.out_path, filename)
 
@@ -111,20 +111,20 @@ class PNG(FormatProvider):
             index = 0
 
             while True:
-                start_at = self.__find_header(f)
+                start_at = self._find_header(f)
 
                 if start_at is None:
                     break
 
                 while True:
-                    chunk_status = self.__parse_chunk(f)
+                    chunk_status = self._parse_chunk(f)
 
                     if chunk_status == ChunkStatus.ERROR:
                         break
 
                     if chunk_status == ChunkStatus.END:
                         end_at = f.tell()
-                        out_path = self.__get_file_path(index)
+                        out_path = self._get_file_path(index)
                         FileOperations.copy(f, out_path, start_at, end_at)
                         index += 1
                         break
