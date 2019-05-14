@@ -16,9 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import pytest
+from . import RESOURCES_PATH
 from sevensource.formats.png import PNG
 
+image_path = os.path.join(RESOURCES_PATH, 'unchanged.png')
 
-def test_sanity():
-    assert True
+
+def test_header_pos():
+    with open(image_path, 'rb') as f:
+        plugin = PNG('', '')
+        res = plugin._find_header(f)
+        assert (res == 0)
+
+        res = plugin._find_header(f)
+        assert (res is None)
