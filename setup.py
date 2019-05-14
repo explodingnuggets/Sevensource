@@ -39,7 +39,8 @@ setup(
         'dev': [
             'pep8',
             'pylint',
-            'pytest'
+            'pytest',
+            'tox'
         ]
     },
     entry_points={
