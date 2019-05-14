@@ -16,9 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-from .. import RESOURCES_PATH
+import io
+from sevensource.formats.png import PNG
+from sevensource.formats.png.plugin import ChunkStatus
 
-RESOURCES_PATH = os.path.join(RESOURCES_PATH, 'png')
 
-HEADER_LEN = 8
+def assert_find_header(f: io.BufferedReader, exp: int):
+    plugin = PNG('', '')
+    res = plugin._find_header(f)
+
+    assert (res == exp)
+
+
+def assert_parse_chunk(f: io.BufferedReader):
+    plugin = PNG('', '')
+
+    while True:
+        res = plugin._parse_chunk(f)
+
+        assert (res != ChunkStatus.ERROR)
+
+        if res == ChunkStatus.END:
+            break

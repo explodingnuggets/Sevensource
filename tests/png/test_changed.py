@@ -15,3 +15,28 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import os
+import pytest
+from . import common, HEADER_LEN, RESOURCES_PATH
+from io import SEEK_SET
+from sevensource.formats.png import PNG
+from sevensource.formats.png.plugin import ChunkStatus
+
+IMAGE_PATH = os.path.join(RESOURCES_PATH, 'changed.png')
+
+PADDING = 20
+CHUNK_START = HEADER_LEN + PADDING
+
+
+def test_header_pos():
+    with open(IMAGE_PATH, 'rb') as f:
+        common.assert_find_header(f, PADDING)
+        common.assert_find_header(f, None)
+
+
+def test_chunk_parser():
+    with open(IMAGE_PATH, 'rb') as f:
+        f.seek(CHUNK_START, SEEK_SET)
+
+        common.assert_parse_chunk(f)
